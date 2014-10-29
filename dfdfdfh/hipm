@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+
+void Heapify(int *A, int i,int heapSize)
+{
+	int l = 2*i; // lewy syn
+	int r = 2*i+1; // prawy syn
+
+	int zamiana[1],largest;
+
+	if ((l<=heapSize) &&(A[l-1]>A[i-1]))
+		largest = l;
+	else largest = i;
+	if ((r<=heapSize)&&(A[r-1]>A[largest-1]))
+		largest=r;
+	if (largest != i)
+	{
+		 zamiana[1]=A[i-1];
+		 A[i-1]=A[largest-1];
+		 A[largest-1]=zamiana[1];
+		 Heapify(A,largest,heapSize);
+	}	
+	
+}
+
+void BuildHeap(int *A,int heapSize)
+{
+	int i;
+	
+	for (i=(heapSize/2);i>0;i--)
+		Heapify(A,i,heapSize);
+		
+}
+
+void HeapSort(int *A, int heapSize)
+{
+
+	int i,zamiana[1];
+	BuildHeap(A,heapSize);
+	for (i=heapSize;i>0;i--)
+	{
+		zamiana[0]= A[heapSize-1];
+		A[heapSize-1]=A[0];
+		A[0]=zamiana[0];
+		heapSize--;
+		Heapify(A,1,heapSize);
+	}
+
+}
+
+
+int *Odczyt(int *heapSize)
+{
+ 	int i,j=0;
+ 	int m;
+ 		
+ 		
+    FILE *wejscie; 
+	wejscie=fopen("wejscie.txt","r");
+        
+    while(fscanf(wejscie,"%d",&m)!=EOF)
+    	i++;
+    
+ 	*heapSize=i;
+    rewind(wejscie);
+    int *A = (int*)malloc(sizeof(*A)*(*heapSize));
+ 	
+    while(j<(*heapSize))
+    {
+        fscanf(wejscie,"%i",&A[j]);
+		j++;   
+    }
+    fclose(wejscie);
+   
+    return A;
+	
+}
+
+void Zapis(int *A,int heapSize)
+{
+ 	int i=0;
+    FILE *wyjscie;
+	wyjscie=fopen("wyjscie.txt","w");
+      
+	while(i<heapSize)
+    {
+		fprintf(wyjscie,"%i\n",A[i]);
+		i++;
+    }
+	fclose(wyjscie);
+ 
+}
+
+
+int main(int argc, char *argv[]) 
+{
+	int ileLiczb,i;
+	    
+    int *A=Odczyt(&ileLiczb);
+    printf("Liczby przed sortowaniem : \n");
+    for(i=0;i<ileLiczb;i++)
+    printf("%i, ",A[i]);
+    
+    printf("\n\n ");
+    
+    HeapSort(A,ileLiczb);
+    
+    printf("Liczby po sortowaniu : \n");
+    for(i=0;i<ileLiczb;i++)
+    printf("%i, ",A[i]);
+    
+    printf("\n\n ");
+    
+    Zapis(A,ileLiczb);
+
+	return 0;
+	
+}
