@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void Heapify(int A[],int i,int heapSize)
+{
+        int l;
+        int r;
+        int largest=i;
+        int z;
+
+
+do
+{
+        i=largest;
+        l = i*2;
+        r = i*2+1;
+
+       if (l<= heapSize && A[l]>A[i])
+       {
+            largest = l;
+       }
+       else
+       {
+            largest = i;
+	   }
+
+
+        if (r<= heapSize && A[r]>A[largest])
+        {
+            largest = r;
+        }
+        if (largest != i)
+        {
+            z=A[i];
+            A[i]=A[largest];
+            A[largest]=z;
+        }
+    }
+        while(i*2<=heapSize && i!=largest);
+}
+
+
+
+void BuildHeap(int a[],int heapSize)
+{
+    int i;
+    for (i= heapSize/2; i>=1; i--)
+    {
+        Heapify(a,i,heapSize);
+    }
+}
+
+
+void HeapSort(int a[],int heapSize)
+{
+    int i,z;
+    int y=heapSize;
+    BuildHeap(a,heapSize);
+    for (i=heapSize; i>=1; i--)
+    {
+        z=a[y];
+        a[y]=a[1];
+        a[1]=z;
+        y=y-1;
+        Heapify(a,1,y);
+    }
+}
+
+
+int main()
+{
+    int i;
+    int a[100];
+
+
+    FILE * in; // odczyt pliku
+   	in = fopen("in.txt", "r");
+    if (in == NULL)
+    {
+        printf ("Brak pliku\n");
+        return -1;
+    }
+    for(i=1; feof(in) == 0; i++)
+        fscanf(in, "%d", &a[i]);
+
+    fclose(in);
+    a[i] = 'NULL';
+
+
+    printf("Liczby przed posortowaniem : \n");
+    i=0;
+    while (a[i]!='NULL')
+    {
+    printf("%i, ",a[i]);
+    i++;
+    }
+
+
+
+    printf("\n\nLiczby po sortowaniu : \n");
+    HeapSort(a,i-1); // sortowanie liczb
+
+
+    FILE * out; //zapis pliku
+    out = fopen("out.txt","w");
+    i=1;
+    while(a[i]!='NULL')
+    {
+        fprintf(out,"%d\n", a[i]);
+        printf (" %d",  a[i]);  //Wypisuje otrz wartosci w kons. programu
+        i++;
+    }
+
+    fclose(out);
+    return 0;
+}
